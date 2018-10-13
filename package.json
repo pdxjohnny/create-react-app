@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
+    "gh-pages": "^2.0.1",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
@@ -27,5 +28,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "homepage" : "https://pdxjohnny.github.io/create-react-app"
+  "homepage": "https://pdxjohnny.github.io/create-react-app/"
 }
