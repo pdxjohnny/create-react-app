@@ -41,7 +41,6 @@ class Home extends React.Component {
   };
 
   async genKey () {
-    console.log(this.state.publicKey.length)
     if (this.state.publicKey.length) {
       this.setState({
         open: true,
@@ -55,7 +54,6 @@ class Home extends React.Component {
       passphrase: 'super long and hard to guess secret'         // protects the private key
     };
     const key = await openpgp.generateKey(options);
-    console.log(key)
     this.setState({
       open: true,
       publicKey: key.publicKeyArmored,
@@ -156,14 +154,14 @@ class BasicExample extends React.Component {
       <Router>
         <div>
           <BottomNavigation value={value} onChange={this.handleChange}>
-            <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} component={Link} to="/about" />
-            <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} component={Link} to="/" />
-            <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} component={Link} to="/topics" />
+            <BottomNavigationAction label="About" value="favorites" icon={<FavoriteIcon />} component={Link} to="/about" />
+            <BottomNavigationAction label="Home" value="recents" icon={<RestoreIcon />} component={Link} to="/" />
+            <BottomNavigationAction label="Topics" value="nearby" icon={<LocationOnIcon />} component={Link} to="/topics" />
           </BottomNavigation>
 
-          <Route exact path="/" render={(props) => <Home {...props} classes={classes} />} />
-          <Route path="/about" component={About} />
-          <Route path="/topics" component={Topics} />
+          <Route exact path={`${process.env.PUBLIC_URL}/`} render={(props) => <Home {...props} classes={classes} />} />
+          <Route path={`${process.env.PUBLIC_URL}/about`} component={About} />
+          <Route path={`${process.env.PUBLIC_URL}/topics`} component={Topics} />
         </div>
       </Router>
     );
