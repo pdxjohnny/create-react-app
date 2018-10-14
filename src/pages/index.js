@@ -15,6 +15,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import withRoot from '../withRoot';
+import openpgp from 'openpgp';
 
 const styles = theme => ({
   root: {
@@ -26,6 +27,7 @@ const styles = theme => ({
 class Home extends React.Component {
   state = {
     open: false,
+    publicKey: '',
   };
 
   handleClose = () => {
@@ -35,21 +37,44 @@ class Home extends React.Component {
   };
 
   handleClick = () => {
+    this.genKey();
+  };
+
+  async genKey () {
+    console.log(this.state.publicKey.length)
+    if (this.state.publicKey.length) {
+      this.setState({
+        open: true,
+      });
+      return;
+    }
+    var options = {
+      userIds: [{ name:'Jon Smith', email:'jon@example.com' }], // multiple user IDs
+      // numBits: 4096,                                            // RSA key size
+      numBits: 2048,                                            // RSA key size
+      passphrase: 'super long and hard to guess secret'         // protects the private key
+    };
+    const key = await openpgp.generateKey(options);
+    console.log(key)
     this.setState({
       open: true,
+      publicKey: key.publicKeyArmored,
     });
+    // var privkey = key.privateKeyArmored; // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
+    // var pubkey = key.publicKeyArmored;   // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
+    // var revocationSignature = key.revocationSignature; // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
   };
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { open, publicKey } = this.state;
 
     return (
       <div className={classes.root}>
         <Dialog open={open} onClose={this.handleClose}>
           <DialogTitle>Super Secret Password</DialogTitle>
           <DialogContent>
-            <DialogContentText>1-2-3-4-5</DialogContentText>
+            <DialogContentText>{publicKey}</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={this.handleClose}>
@@ -112,8 +137,11 @@ const Topics = ({ match }) => (
 );
 
 class BasicExample extends React.Component {
-  state = {
-    value: 'recents',
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 'recents',
+    };
   };
 
   handleChange = (event, value) => {
